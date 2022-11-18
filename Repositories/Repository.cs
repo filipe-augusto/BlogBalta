@@ -18,13 +18,9 @@ namespace BlogBalta.Repositories
             => _conection.Insert<TModel>(model);
 
         public void Update(TModel model)
-        {
-            _conection.Insert<TModel>(model);
-        }
+           =>  _conection.Update<TModel>(model);
         public void Delete(TModel model)
-        {
-            _conection.Delete<TModel>(model);
-        }
+          =>  _conection.Delete<TModel>(model);
         public void Delete(int id)
         {
             if (id != 0)
