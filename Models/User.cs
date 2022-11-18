@@ -1,6 +1,6 @@
 using System;
 using Dapper.Contrib.Extensions;
-namespace BlogBalta
+namespace BlogBalta.Models
 {
     [Table("[User]")]
     public class User
