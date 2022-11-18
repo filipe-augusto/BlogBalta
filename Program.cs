@@ -167,14 +167,12 @@ namespace BlogBalta
             repository.Delete(user);
             System.Console.WriteLine( $"User {user.Name} foi limado!");
         }
-
         public static void Delete_Role(SqlConnection con){
             var repo = new Repository<Role>(con);
             var role = repo.Get(4);
             repo.Delete(role);
             System.Console.WriteLine($"role {role.Name}");
         }
-
         public static void Delete_tag(SqlConnection con){
             var repo = new Repository<Tag>(con);
             var tag = repo.Get(2);
