@@ -17,31 +17,32 @@ namespace BlogBalta
         const string conectStringJob = @"Server=IM-BRS-NT1071\MSSQLSERVER01; Integrated Security=SSPI; Database=Blog;";
         static void Main(string[] args)
         {
-            var con = new SqlConnection(conectStringJob);
+            var con = new SqlConnection(connectionString);
             con.Open();
+            // ReadUsersWithGenericClass(con);
             // ReadUsersNew(con);
             //System.Console.Clear();
-           /*  System.Console.WriteLine("GET"); */
-           /*  ReadUsersWithGenericClass(con); */
-           /*  System.Console.WriteLine("*************************"); */
-           /*  ReadRolesWithGenericClass(con); */
-           /*  System.Console.WriteLine("*************************"); */
-           /*  ReadTagsWithGenericClass(con); */
-           /*  System.Console.WriteLine("GET ONE"); */
-           /*      Read_User(con); */
-           /*  System.Console.WriteLine("*************************"); */
-           /*      Read_Role(con); */
-           /*   System.Console.WriteLine("*************************"); */
-           /*      Read_Tag(con); */
-             /*  Console.WriteLine("CRE ATE"); */
-             /*  Create_User(con);   */
-             /*  Create_Role(con); */
-             /*  Create_Tag(con); */
-              System.Console.WriteLine("ALTER");
-              Alter_User(con);
-              Alter_Role(con);
-              Alter_Tag(con);
-
+            /*  System.Console.WriteLine("GET"); */
+            /*   */
+            /*  System.Console.WriteLine("*************************"); */
+            /*  ReadRolesWithGenericClass(con); */
+            /*  System.Console.WriteLine("*************************"); */
+            /*  ReadTagsWithGenericClass(con); */
+            /*  System.Console.WriteLine("GET ONE"); */
+            /*      Read_User(con); */
+            /*  System.Console.WriteLine("*************************"); */
+            /*      Read_Role(con); */
+            /*   System.Console.WriteLine("*************************"); */
+            /*      Read_Tag(con); */
+            /*  Console.WriteLine("CRE ATE"); */
+            /*  Create_User(con);   */
+            /*  Create_Role(con); */
+            /*  Create_Tag(con); */
+            /*        System.Console.WriteLine("ALTER");
+                   Alter_User(con);
+                   Alter_Role(con);
+                   Alter_Tag(con); */
+            ReadUsersWitRoles(con);
             con.Close();
             #region old
             //Console.Clear();
@@ -54,6 +55,19 @@ namespace BlogBalta
             #endregion
         }
 
+        public static void ReadUsersWitRoles(SqlConnection connection)
+        {
+            var repository = new UserRepository2(connection);
+            var users = repository.GetWithRoles();
+            foreach (var user in users)
+            {
+                System.Console.WriteLine($"{user.Name}- {user.Email}");
+                foreach (var role in user.Roles)
+                {
+                    System.Console.WriteLine($"     {role.Name}");
+                }
+            }
+        }
         public static void ReadUsersWithGenericClass(SqlConnection connection)
         {
             var repository = new Repository<User>(connection);
@@ -75,61 +89,70 @@ namespace BlogBalta
             foreach (var tag in tags)
                 System.Console.WriteLine($"{tag.Name}- {tag.Slug}");
         }
-     
-        public static void Read_User(SqlConnection connection){
+
+        public static void Read_User(SqlConnection connection)
+        {
             var repository = new Repository<User>(connection);
             var user = repository.Get(1);
             System.Console.WriteLine($"USER:  {user.Name}- {user.Email}");
         }
-        public static void Read_Role(SqlConnection conection){
-               var repository = new Repository<Role>(conection);
-               var role = repository.Get(1);
-               System.Console.WriteLine($"ROLE: {role.Name}");
-            }
-        public static void Read_Tag(SqlConnection conection){
-       var repository = new Repository<Tag>(conection);
-       var tag = repository.Get(1);
-       System.Console.WriteLine($"TAG: {tag.Name}");
-    }
-        
-        public static void Create_User(SqlConnection connection){
-        var repository = new Repository<User>(connection);
-        var user = new User()
+        public static void Read_Role(SqlConnection conection)
         {
-           Bio = "Equipe monitor.io",
-           Email = "Gello@monitor.io",
-          Image = "https://...",
-          Name = "eeuipe monitor.io",
-          PasswordHash = "Hash",
-          Slug = "equipe-montior"
+            var repository = new Repository<Role>(conection);
+            var role = repository.Get(1);
+            System.Console.WriteLine($"ROLE: {role.Name}");
+        }
+        public static void Read_Tag(SqlConnection conection)
+        {
+            var repository = new Repository<Tag>(conection);
+            var tag = repository.Get(1);
+            System.Console.WriteLine($"TAG: {tag.Name}");
+        }
+
+        public static void Create_User(SqlConnection connection)
+        {
+            var repository = new Repository<User>(connection);
+            var user = new User()
+            {
+                Bio = "Equipe monitor.io",
+                Email = "Gello@monitor.io",
+                Image = "https://...",
+                Name = "eeuipe monitor.io",
+                PasswordHash = "Hash",
+                Slug = "equipe-montior"
             };
             repository.Create(user);
             System.Console.WriteLine("User realizado com sucesso!");
         }
-        public static void Create_Role(SqlConnection con){
+        public static void Create_Role(SqlConnection con)
+        {
             var repository = new Repository<Role>(con);
-            var role = new Role(){
+            var role = new Role()
+            {
                 Name = "user-local",
                 Slug = "localUser"
             };
             repository.Create(role);
             System.Console.WriteLine("Role criada com sucessso");
         }
-        public static void Create_Tag(SqlConnection con){
+        public static void Create_Tag(SqlConnection con)
+        {
             var repository = new Repository<Tag>(con);
-            var tag = new Tag(){
-            Name = "Tag exemplo",
-            Slug = "slug tag"
-             };
+            var tag = new Tag()
+            {
+                Name = "Tag exemplo",
+                Slug = "slug tag"
+            };
             repository.Create(tag);
             System.Console.WriteLine("tag criada com sucesso.");
         }
-     
-        public static void Alter_User(SqlConnection con){
+
+        public static void Alter_User(SqlConnection con)
+        {
             var respository = new Repository<User>(con);
             var user = new User()
             {
-                Id =3,
+                Id = 3,
                 Bio = "Equipe || Monitor.io",
                 Email = "monitor@monitor.io",
                 Image = "https://...",
@@ -140,46 +163,53 @@ namespace BlogBalta
             respository.Update(user);
             System.Console.WriteLine("User changed");
         }
-        public static void Alter_Role(SqlConnection con){
+        public static void Alter_Role(SqlConnection con)
+        {
             var repo = new Repository<Role>(con);
-            var role = new Role(){
-                 Id = 3,
-                  Name = "Administrador",
-                  Slug = "ADM..."  
+            var role = new Role()
+            {
+                Id = 3,
+                Name = "Administrador",
+                Slug = "ADM..."
             };
             repo.Update(role);
             System.Console.WriteLine("Role changed");
         }
-        public static void Alter_Tag(SqlConnection con){
+        public static void Alter_Tag(SqlConnection con)
+        {
             var repo = new Repository<Tag>(con);
-            var tag = new Tag(){
-                Id=2,
+            var tag = new Tag()
+            {
+                Id = 2,
                 Name = "tag 2",
                 Slug = "Tag 2"
             };
             repo.Update(tag);
             System.Console.WriteLine("tag changed");
         }
-     
-        public  static void Delete_User(SqlConnection con){
+
+        public static void Delete_User(SqlConnection con)
+        {
             var repository = new Repository<User>(con);
-            var user  = repository.Get(2);
+            var user = repository.Get(2);
             repository.Delete(user);
-            System.Console.WriteLine( $"User {user.Name} foi limado!");
+            System.Console.WriteLine($"User {user.Name} foi limado!");
         }
-        public static void Delete_Role(SqlConnection con){
+        public static void Delete_Role(SqlConnection con)
+        {
             var repo = new Repository<Role>(con);
             var role = repo.Get(4);
             repo.Delete(role);
             System.Console.WriteLine($"role {role.Name}");
         }
-        public static void Delete_tag(SqlConnection con){
+        public static void Delete_tag(SqlConnection con)
+        {
             var repo = new Repository<Tag>(con);
             var tag = repo.Get(2);
             repo.Delete(tag);
             System.Console.WriteLine($"Tag {tag.Name}");
         }
-     
+
         public static void ReadUsersNew(SqlConnection connection)
         {
             var repository = new UserRepository(connection);
@@ -193,7 +223,7 @@ namespace BlogBalta
             var user = repository.Get(1);
             System.Console.WriteLine($"{user.Name}- {user.Email}");
         }
-       
+
         #region old
         public static void ReadUser()
         {
@@ -258,7 +288,7 @@ namespace BlogBalta
                 System.Console.WriteLine($"{status}");
             }
         }
-        
+
         #endregion
     }
 }
